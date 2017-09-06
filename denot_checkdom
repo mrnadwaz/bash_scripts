@@ -1,0 +1,31 @@
+#!/bin/bash
+# Author: Dheny Priatna 
+
+if [ "$#" -lt "1" ];then
+echo "Must specify domain"
+exit;
+fi
+
+DOMAINNAME=$@
+
+for domainname in $DOMAINNAME
+do
+
+echo "Name Server for domain $domainname is:"
+	nameserver=$(dig $domainname ns +short)
+	for i in $nameserver;do	echo $i;done
+
+printf "\n"
+echo "Resolving A Record's $domainname is:"
+	for f in $nameserver;do host $domainname $f;done | grep addr
+
+printf "\n"
+echo "Resolving MX Record's $domainname is:"
+
+	for x in $nameserver;do host -t mx $domainname $x;done | grep mail
+
+done
+
+
+
+
